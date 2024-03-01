@@ -1,15 +1,12 @@
 const mongoose = require("mongoose");
 
-const categorySchema = new mongoose.Schema({
+const AnimecategorySchema = new mongoose.Schema({
     name :{
         type:String,
         required:true,   
     },
-    slug :{
-        type:String,
-        lowercase:true,   
-    },
+
 })
-const categoryModel = mongoose.model('category',categorySchema);
+const categoryModel = mongoose.model('categories',AnimecategorySchema);
 
 module.exports = categoryModel;

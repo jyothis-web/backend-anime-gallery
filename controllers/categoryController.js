@@ -73,24 +73,6 @@ const updatecategoryController = async (req, res) => {
 };
 
 
-// const getcategoryController = async (req, res) => {
-
-//   try {
-//     const category = await categoryModel.find({});
-//     console.log('Category data:', category);
-//     // return res.status(200).json({
-//     //   success: true,
-//     //   message: "Category list fetched successfully",
-//     //   category,
-//     // });
-//   } catch (error) {
-//     console.log(error);
-//     // return res.status(500).json({
-//     //   success: false,
-//     //   message: "Error while getting all categories",
-//     // });
-//   }
-// };
 
 const getcategoryController = async (req, res) => {
   try {
@@ -176,6 +158,8 @@ const deletecategoryController = async (req, res) => {
     // });
   }
 };
+
+
 
 module.exports = {
   createcategoryController,

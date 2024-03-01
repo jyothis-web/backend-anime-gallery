@@ -130,7 +130,7 @@ const loginController = async (req, res) => {
     }
 
     // Generate token
- const token = await jwt.sign(
+ const token = jwt.sign(
   { _id: user._id },
   process.env.JWT_SECRET_REFRESH_TOKEN,
   { expiresIn: "7d" }
