@@ -201,8 +201,6 @@ const updateMovieController = async (req, res) => {
 };
 
 
-
-
 //for updating products
 // const updateMovieController = async (req, res) => {
 //   // let newImage;
@@ -500,8 +498,8 @@ const searchMovieController = async (req, res) => {
 
 const searchMovieCategoryFilterController = async (req, res) => {
   try {
-    const categoryId = req.params.id;
-
+    const categoryId = req.params.categoryId;;
+console.log(categoryId);
     const filteredMovies = await movieModel.find({
       categories: { $in: [categoryId] },
     });
