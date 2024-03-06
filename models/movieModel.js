@@ -43,6 +43,10 @@ const MovieSchema = new mongoose.Schema(
       contentType: String,
       videoPath: String,
     },
+    trailer: {
+      type: String, // Store the rating as a number
+     // Default value if not provided
+    },
     rating: {
       type: Number, // Store the rating as a number
       default: 0, // Default value if not provided

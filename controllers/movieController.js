@@ -16,6 +16,7 @@ const createmovieController = async (req, res) => {
       categories,
       rating,
       description,
+      trailer
     } = req.body;
     const imageFiles = req.files["image"];
     // const imageFile = req.files['image'] ? req.files['image'][0] : null;
@@ -61,6 +62,7 @@ const createmovieController = async (req, res) => {
       categories,
       rating,
       image,
+      trailer
     };
 
     // Check if videoFile is present before accessing 'buffer'
@@ -92,11 +94,10 @@ const createmovieController = async (req, res) => {
   }
 };
 
-//for updating products
 const updateMovieController = async (req, res) => {
-  // let newImage;
   try {
     const {
+      id,
       name,
       year,
       movieTime,
@@ -104,13 +105,14 @@ const updateMovieController = async (req, res) => {
       categories,
       rating,
       description,
+      trailer,
     } = req.body;
-    const imageFiles = req.files["image"] || [];
-    // const imageFile = req.files['image'] ? req.files['image'][0] : null;
-    const videoFile = req.files["video"] ? req.files["video"][0] : null;
 
-    console.log("Payload:", req.body);
-    console.log("Image File:", files);
+    const imageFiles = req.files["image"];
+    const videoFile = req.files["video"];
+
+    console.log("movie id:", id);
+    console.log("Image Files:", imageFiles);
 
     // Check if the ID is provided
     if (!id) {
@@ -135,14 +137,14 @@ const updateMovieController = async (req, res) => {
 
     try {
       // Check if a new image is provided
-      if (files) {
+      if (imageFiles) {
         // Create a new object for the image field
         image = imageFiles.map((file) => ({
           data: file.buffer,
           contentType: file.mimetype,
           imagePath: `uploads/${file.filename}`,
         }));
-        console.log("updated image", image);
+        console.log("Updated Image:", image);
       }
     } catch (readError) {
       console.error("Error reading or saving new image:", readError.message);
@@ -162,37 +164,148 @@ const updateMovieController = async (req, res) => {
     existingMovie.rating = rating || existingMovie.rating;
     existingMovie.movieTime = movieTime || existingMovie.movieTime;
     existingMovie.movieGenres = movieGenres || existingMovie.movieGenres;
+    existingMovie.trailer = trailer || existingMovie.trailer;
 
+    // Update image if provided
     if (image.length > 0) {
       existingMovie.image = image;
     }
 
     // Update video if provided
-    if (videoFile) {
-      existingMovie.video = {
-        data: videoFile.buffer,
-        contentType: videoFile.mimetype,
-        videoPath: `uploads/${videoFile.filename}`,
+    if (videoFile && videoFile[0]) {
+      const video = {
+        data: videoFile[0].buffer,
+        contentType: videoFile[0].mimetype,
+        videoPath: `uploads/${videoFile[0].filename}`,
       };
+      existingMovie.video = video;
     }
+
     // Save the updated product to the database
     await existingMovie.save();
 
     // Include the image information in the response
     return res.status(200).json({
       success: true,
-      message: "movie updated successfully",
+      message: "Movie updated successfully",
       existingMovie,
     });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
       success: false,
-      message: "Error while updating product",
+      message: "Error while updating movie",
       error,
     });
   }
 };
+
+
+
+
+//for updating products
+// const updateMovieController = async (req, res) => {
+//   // let newImage;
+//   try {
+//     const {
+//       name,
+//       year,
+//       movieTime,
+//       movieGenres,
+//       categories,
+//       rating,
+//       description,
+//       trailer
+//     } = req.body;
+//     const imageFiles = req.files["image"];
+//     // const imageFile = req.files['image'] ? req.files['image'][0] : null;
+//     const videoFile = req.files["video"] ? req.files["video"][0] : null;
+
+//     console.log("Payload:", req.body);
+//     console.log("Image File:", files);
+
+//     // Check if the ID is provided
+//     if (!id) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Product ID not provided",
+//       });
+//     }
+
+//     // Find the product in the database
+//     const existingMovie = await movieModel.findById(id);
+
+//     // Check if the product with the given ID exists
+//     if (!existingMovie) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Product not found",
+//       });
+//     }
+
+//     let image = [];
+
+//     try {
+//       // Check if a new image is provided
+//       if (files) {
+//         // Create a new object for the image field
+//         image = imageFiles.map((file) => ({
+//           data: file.buffer,
+//           contentType: file.mimetype,
+//           imagePath: `uploads/${file.filename}`,
+//         }));
+//         console.log("updated image", image);
+//       }
+//     } catch (readError) {
+//       console.error("Error reading or saving new image:", readError.message);
+//       return res.status(500).json({
+//         success: false,
+//         message: "Error while updating product image",
+//         error: readError.message,
+//       });
+//     }
+
+//     // Update product fields
+//     existingMovie.name = name || existingMovie.name;
+//     existingMovie.description = description || existingMovie.description;
+//     existingMovie.slug = slugify(existingMovie.name);
+//     existingMovie.year = year || existingMovie.year;
+//     existingMovie.categories = categories || existingMovie.categories;
+//     existingMovie.rating = rating || existingMovie.rating;
+//     existingMovie.movieTime = movieTime || existingMovie.movieTime;
+//     existingMovie.movieGenres = movieGenres || existingMovie.movieGenres;
+//     existingMovie. trailer =  trailer || existingMovie. trailer;
+
+//     if (image.length > 0) {
+//       existingMovie.image = image;
+//     }
+
+//     // Update video if provided
+//     if (videoFile) {
+//       existingMovie.video = {
+//         data: videoFile.buffer,
+//         contentType: videoFile.mimetype,
+//         videoPath: `uploads/${videoFile.filename}`,
+//       };
+//     }
+//     // Save the updated product to the database
+//     await existingMovie.save();
+
+//     // Include the image information in the response
+//     return res.status(200).json({
+//       success: true,
+//       message: "movie updated successfully",
+//       existingMovie,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     return res.status(500).json({
+//       success: false,
+//       message: "Error while updating product",
+//       error,
+//     });
+//   }
+// };
 
 //for get all products
 const getMovieController = async (req, res) => {
@@ -359,7 +472,7 @@ const filterproductController = async (req, res) => {
   }
 };
 
-const searchproductController = async (req, res) => {
+const searchMovieController = async (req, res) => {
   try {
     const { keyword } = req.params;
     const result = await movieModel.find({
@@ -385,7 +498,7 @@ const searchproductController = async (req, res) => {
   }
 };
 
-const searchMovieFilterController = async (req, res) => {
+const searchMovieCategoryFilterController = async (req, res) => {
   try {
     const categoryId = req.params.id;
 
@@ -417,8 +530,8 @@ module.exports = {
   deleteMovieController,
   imageproductController,
   filterproductController,
-  searchproductController,
-  searchMovieFilterController,
+  searchMovieController,
+  searchMovieCategoryFilterController ,
 };
 
 // const slugify = require('slugify');

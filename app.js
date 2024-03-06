@@ -13,7 +13,7 @@ const path = require("path");
 
 const app = express();
 //middlewares
-app.use(morgan('dev'));
+// app.use(morgan('dev'));
 app.use(express.json());
 app.use(cors());
 app.use('/uploads', express.static('uploads'));
