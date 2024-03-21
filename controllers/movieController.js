@@ -5,7 +5,7 @@ const path = require("path");
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 
-//for creating products
+//for creating new  movies
 const createmovieController = async (req, res) => {
   try {
     const {
@@ -94,6 +94,7 @@ const createmovieController = async (req, res) => {
   }
 };
 
+// for updating new movies
 const updateMovieController = async (req, res) => {
   try {
     const {
@@ -199,7 +200,6 @@ const updateMovieController = async (req, res) => {
     });
   }
 };
-
 
 //for updating products
 // const updateMovieController = async (req, res) => {
