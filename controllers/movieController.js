@@ -469,7 +469,7 @@ const filterproductController = async (req, res) => {
     });
   }
 };
-
+//for search movie
 const searchMovieController = async (req, res) => {
   try {
     const { keyword } = req.params;
@@ -495,7 +495,7 @@ const searchMovieController = async (req, res) => {
     });
   }
 };
-
+//based on category
 const searchMovieCategoryFilterController = async (req, res) => {
   try {
     const categoryId = req.params.categoryId;;
@@ -519,6 +519,90 @@ console.log(categoryId);
   }
 };
 
+//to upload images of actors
+const createMovieImageController = async (req, res) => {
+  try {
+    const {id}= req.params;
+    const {Actorname } = req.body;
+    const imageFiles = req.files["actorImage"];
+    console.log("movie id:", id);
+    console.log("Image Files:", imageFiles);
+
+    // Check if the ID is provided
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: "Movie ID not provided",
+      });
+    }
+
+    // Find the movie in the database
+    const existingMovie = await movieModel.findById(id);
+
+    // Check if the movie with the given ID exists
+    if (!existingMovie) {
+      return res.status(404).json({
+        success: false,
+        message: "Movie not found",
+      });
+    }
+
+    let images = existingMovie.actorImage || [];
+
+    try {
+      // Check if new images are provided
+      if (imageFiles) {
+        // Create new image objects for each file provided
+        const newImages = imageFiles.map((file) => ({
+          data: file.buffer,
+          contentType: file.mimetype,
+          imagePath: `uploads/${file.filename}`,
+        }));
+
+        // If there are existing images, update them with the new images
+        if (images.length > 0) {
+          images = newImages;
+        } else {
+          // Otherwise, add the new images to the existing ones
+          images = images.concat(newImages);
+        }
+        console.log("Updated Images:", images);
+      }
+    } catch (readError) {
+      console.error("Error reading or saving new images:", readError.message);
+      return res.status(500).json({
+        success: false,
+        message: "Error while updating movie images",
+        error: readError.message,
+      });
+    }
+
+    // Update images in the movie object
+    existingMovie.actorImage = images;
+    // existingMovie.Actorname = Actorname;
+
+    // Save the updated movie to the database
+    await existingMovie.save();
+
+    // Include the movie information in the response
+    return res.status(200).json({
+      success: true,
+      message: "Movie updated successfully",
+      existingMovie,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Error while updating movie",
+      error,
+    });
+  }
+};
+
+
+
+
 module.exports = {
   createmovieController,
   updateMovieController,
@@ -530,6 +614,8 @@ module.exports = {
   filterproductController,
   searchMovieController,
   searchMovieCategoryFilterController ,
+  //updateMovieImageController,
+  createMovieImageController
 };
 
 // const slugify = require('slugify');

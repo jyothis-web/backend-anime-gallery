@@ -75,6 +75,20 @@ router.put(
   // },
   movieController.updateMovieController
 );
+router.post(
+  "/create-Image-Movie/:id",
+  // requireSignin,
+  // loginAdmin,
+  upload.fields([{ name: "actorImage", maxCount: 6 }]),
+  movieController.createMovieImageController
+);
+router.put(
+  "/update-Image-Movie/:id",
+  // requireSignin,
+  // loginAdmin,
+  upload.fields([{ name: "actorImage", maxCount: 1 }]),
+  movieController.createMovieImageController
+);
 
 //route for get all products
 router.get(

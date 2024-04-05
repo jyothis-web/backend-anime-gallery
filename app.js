@@ -38,4 +38,4 @@ app.listen(PORT, () => {
     console.log(`server started on port :${PORT}`);
 });
 //DBconnection
-connectDB(); // Call the connectDB function
+connectDB(); 

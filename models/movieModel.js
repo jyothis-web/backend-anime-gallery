@@ -51,6 +51,16 @@ const MovieSchema = new mongoose.Schema(
       type: Number, // Store the rating as a number
       default: 0, // Default value if not provided
     },
+    actorImage: [
+      {
+        data: Buffer,
+        contentType: String,
+        imagePath: String,
+      },
+    ],
+    Actorname: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

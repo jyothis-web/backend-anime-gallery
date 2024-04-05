@@ -77,7 +77,7 @@ const updatecategoryController = async (req, res) => {
 const getcategoryController = async (req, res) => {
   try {
     // Fetch categories from the database
-    const categories = await categoryModel.find({}, "name slug");
+    const categories = await categoryModel.find({});
 
     // Send JSON response with categories
     return res.status(200).json({

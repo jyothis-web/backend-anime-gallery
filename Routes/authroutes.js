@@ -10,6 +10,10 @@ router.post('/register', authController.registerController);
 // routing for login || get
 router.post('/login', authController.loginController);
 
+router.post('/forgotpassword',authController.forgotPasswordEmail);
+
+router.post('/verifyOTP',authController.verifyOTP);
+router.post('/resetPassword',authController.resetPassword);
 
 //test routes admin
 router.post('/admin/login',isadmin,authController.loginController);
